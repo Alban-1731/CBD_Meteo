@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; text-align: center; }
+select { width: 50%; height: 150px; padding: 8px; margin: 10px; }
+table { width: 60%; margin: 20px auto; border-collapse: collapse; }
+th, td { padding: 10px; border: 1px solid #ddd; }
+th { background-color: #007BFF; color: white; }
