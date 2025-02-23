@@ -8,12 +8,25 @@
     <style src="./style.css"></style>
 </head>
 <body>
+    <label for="search">Rechercher une commune :</label>
+    <input type="text" id="search" placeholder="Rechercher une commune..." onkeyup="filtrerListe()">
+          
+    <label for="tri">Trier par :</label>
+    <select id="tri">
+        <option value="commune">Commune (A-Z)</option>
+        <option value="parcelle">Numéro de parcelle (croissant)</option>
+    </select>
+    
+    <button id="btnTrier">Trier</button>
+    
+    <ul id="resultats"></ul>
+    
     <h2>Sélectionnez une ou plusieurs parcelles</h2>
     <select id="parcelle-select" multiple>
         <!-- Options ajoutées dynamiquement -->
     </select>
 
-    <h2>Prévisions Météo (5 jours)</h2>
+    <h2>Prévisions Météo</h2>
     <label for="jours">Nombre de jours de prévisions :</label>
     <select id="jours">
         <option value="1">1 jour</option>
