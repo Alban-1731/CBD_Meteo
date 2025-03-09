@@ -23,11 +23,18 @@ async function chargerCSV() {
         const selectedIds = Array.from(this.selectedOptions).map(option => option.value);
         const selectedParcelles = parcelles.filter(p => selectedIds.includes(p.id));
 
-        // récupérer les parcelles sélectionnées
+       // Récupérer tous les boutons radio avec le nom 'option'
+       var radios = document.getElementsByName('option');           // récupérer les parcelles sélectionnées
         document.getElementById("charts-container").innerHTML = "";
         for (const parcelle of selectedParcelles) {
-            const meteo = await getMeteo(parcelle.latitude, parcelle.longitude);
-            afficherMeteoGraphique(parcelle, meteo);        }
+            if (radios[0].checked) {
+                const meteo = await getMeteo(parcelle.latitude, parcelle.longitude);
+                afficherMeteoGraphique(parcelle, meteo);
+            }
+            if (radios[1].checked) {
+                afficherMeteoInfoClimat(parcelle);
+            }
+        }
     });
 
     const selectJours = document.getElementById("jours");
@@ -35,11 +42,19 @@ async function chargerCSV() {
         const selectedIds = Array.from(select.selectedOptions).map(option => option.value);
         const selectedParcelles = parcelles.filter(p => selectedIds.includes(p.id));
 
+       // Récupérer tous les boutons radio avec le nom 'option'
+        var radios = document.getElementsByName('option');        
         // récupérer les parcelles sélectionnées
         document.getElementById("charts-container").innerHTML = "";
         for (const parcelle of selectedParcelles) {
-            const meteo = await getMeteo(parcelle.latitude, parcelle.longitude);
-            afficherMeteoGraphique(parcelle, meteo);        }
+            if (radios[0].checked) {
+                const meteo = await getMeteo(parcelle.latitude, parcelle.longitude);
+                afficherMeteoGraphique(parcelle, meteo);
+            }
+            if (radios[1].checked) {
+                afficherMeteoInfoClimat(parcelle);
+            }
+        }
     });
 }
 
@@ -52,37 +67,30 @@ async function getMeteo(lat, lon) {
     return data.hourly;
 }
 
-function afficherMeteo(parcelle, meteo) {
-    const container = document.getElementById("meteo-container");
-    
-    let tableHTML = `
-        <h3>Parcelle ${parcelle.id} - ${parcelle.commune}</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. Max (°C)</th>
-                    <th>Couverture nuageuse (%)</th>
-                    <th>Vent Max (km/h)</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    console.log(meteo);
-    for (let i = 0; i < 5; i++) {
-        tableHTML += `
-            <tr>
-                <td>${meteo.time[i]}</td>
-                <td>${meteo.temperature_2m_max[i]}</td>
-                <td>${meteo.cloudcover_mean[i]}</td>
-                <td>${meteo.windspeed_10m_max[i]}</td>
-            </tr>
-        `;
-    
-    }
+function afficherMeteoInfoClimat(parcelle) {
+    const container = document.getElementById("charts-container");
 
-    tableHTML += `</tbody></table>`;
-    container.innerHTML += tableHTML;
+    // Création d'un élément pour le titre
+    const title = document.createElement("h3");
+    title.textContent = `Parcelle ${parcelle.id} - ${parcelle.commune}`;
+    container.appendChild(title);
+
+    var iframe = document.createElement('iframe');
+    console.log("Coordonnées lat : ", parcelle.latitude); // 🔍 Vérifie la structure reçue
+    console.log("Coordonnées lon : ", parcelle.longitude); // 🔍 Vérifie la structure reçue
+
+    // Définir les attributs de l'iframe
+    iframe.src = "https://www.infoclimat.fr/public-api/mixed/iframeSLIDE?_ll="+ parcelle.latitude +","+ parcelle.longitude + "&_inc=WyJOaW9ydCIsIjIxIiwiMjk5MDM1NSIsIkZSIl0=&_auth=VE4EE1UrUnBRfAA3AHYBKABoU2YAdgkuA38AYwFqXyJUNFI0BWUHZAVpVitUewojUWIAfggzBzoEbwFhAGpUKFQoBGJVP1I5UT4AYQA1ATAALFMsACIJMAN%2FAHgBZF80VClSNwVgB2YFdFY8VGwKIFFgAGQIMwcgBHgBZwBqVDNUNgRlVTVSMlE4AGMAMgEqACxTNQA4CWIDNAA2AThfb1QzUjEFYgdiBTlWNFRhCiBRZABoCD4HNwRmAWAAb1QyVCgEf1VPUkNRIwAiAHIBYAB1Uy4AaglvAzQ%3D&_c=51c32b1539f551ef510c897a52ed177f"; // Fonction pour obtenir l'URL de l'iframe
+    iframe.width = '888';
+    iframe.height = '336';
+    iframe.style.frameborderborder = '0';
+
+    console.log("Iframe src: ", iframe.src); // 🔍 Vérifie la structure reçue
+
+
+    // Ajouter l'iframe au conteneur
+    container.appendChild(iframe);
+
 }
 
 function afficherMeteoGraphique(parcelle, meteo) {
