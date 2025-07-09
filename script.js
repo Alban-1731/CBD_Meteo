@@ -78,9 +78,24 @@ function afficherMeteoInfoClimat(parcelle) {
     var iframe = document.createElement('iframe');
     console.log("Coordonnées lat : ", parcelle.latitude); // 🔍 Vérifie la structure reçue
     console.log("Coordonnées lon : ", parcelle.longitude); // 🔍 Vérifie la structure reçue
+    
+    // === Préparation de l'ajout de la ville dans l'adresse url ===
+    const data = [parcelle.commune, "0", "0", ""];
+
+    // === Conversion en JSON puis en Base64 ===
+    const jsonString = JSON.stringify(data);
+
+    // Pour encoder en Base64 correctement (UTF-8 compatible)
+    function utf8ToBase64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+    }
+    const base64String = utf8ToBase64(jsonString);
+
+    console.log("Paramètre _inc à utiliser :");
+    console.log(base64String);
 
     // Définir les attributs de l'iframe
-    iframe.src = "https://www.infoclimat.fr/public-api/mixed/iframeSLIDE?_ll="+ parcelle.latitude +","+ parcelle.longitude + "&_inc=WyJOaW9ydCIsIjIxIiwiMjk5MDM1NSIsIkZSIl0=&_auth=VE4EE1UrUnBRfAA3AHYBKABoU2YAdgkuA38AYwFqXyJUNFI0BWUHZAVpVitUewojUWIAfggzBzoEbwFhAGpUKFQoBGJVP1I5UT4AYQA1ATAALFMsACIJMAN%2FAHgBZF80VClSNwVgB2YFdFY8VGwKIFFgAGQIMwcgBHgBZwBqVDNUNgRlVTVSMlE4AGMAMgEqACxTNQA4CWIDNAA2AThfb1QzUjEFYgdiBTlWNFRhCiBRZABoCD4HNwRmAWAAb1QyVCgEf1VPUkNRIwAiAHIBYAB1Uy4AaglvAzQ%3D&_c=51c32b1539f551ef510c897a52ed177f"; // Fonction pour obtenir l'URL de l'iframe
+    iframe.src = "https://www.infoclimat.fr/public-api/mixed/iframeSLIDE?_ll="+ parcelle.latitude +","+ parcelle.longitude + "&_inc=" + base64String + "&_auth=VE4EE1UrUnBRfAA3AHYBKABoU2YAdgkuA38AYwFqXyJUNFI0BWUHZAVpVitUewojUWIAfggzBzoEbwFhAGpUKFQoBGJVP1I5UT4AYQA1ATAALFMsACIJMAN%2FAHgBZF80VClSNwVgB2YFdFY8VGwKIFFgAGQIMwcgBHgBZwBqVDNUNgRlVTVSMlE4AGMAMgEqACxTNQA4CWIDNAA2AThfb1QzUjEFYgdiBTlWNFRhCiBRZABoCD4HNwRmAWAAb1QyVCgEf1VPUkNRIwAiAHIBYAB1Uy4AaglvAzQ%3D&_c=51c32b1539f551ef510c897a52ed177f"; // Fonction pour obtenir l'URL de l'iframe
     iframe.width = '888';
     iframe.height = '336';
     iframe.style.frameborderborder = '0';
